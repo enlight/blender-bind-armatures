@@ -34,6 +34,123 @@ bl_info = {
     "description": "Hooks up a simple game-ready armature to a Rigify or advanced MakeHuman armature."
 }
 
+# mapping of game rig deform bones to Rigify deform bones, the game rig layout is similar
+# to the standard Unity3d Mecanim layout (minus the mouth/eye bones since I don't have any
+# use for them yet)
+rigify_bone_map = {
+    "hips": "DEF-hips",
+        "spine": "DEF-spine",
+            "chest": "DEF-chest",
+                "chest-1": "DEF-chest-1",
+                    "neck": "DEF-neck",
+                        "head": "DEF-head",
+                    "shoulder.L": "DEF-shoulder.L",
+                        "upper_arm.L": "DEF-upper_arm.01.L",
+                            "forearm.L": "DEF-forearm.01.L",
+                                "hand.L": "DEF-hand.L",
+                                    "thumb.01.L": "DEF-thumb.01.L.02",
+                                        "thumb.02.L": "DEF-thumb.02.L",
+                                            "thumb.03.L" : "DEF-thumb.03.L",
+                                    "f_index.01.L": "DEF-f_index.01.L.02",
+                                        "f_index.02.L": "DEF-f_index.02.L",
+                                            "f_index.03.L" : "DEF-f_index.03.L",
+                                    "f_middle.01.L": "DEF-f_middle.01.L.02",
+                                        "f_middle.02.L": "DEF-f_middle.02.L",
+                                            "f_middle.03.L": "DEF-f_middle.03.L",
+                                    "f_ring.01.L": "DEF-f_ring.01.L.02",
+                                        "f_ring.02.L": "DEF-f_ring.02.L",
+                                            "f_ring.03.L": "DEF-f_ring.03.L",
+                                    "f_pinky.01.L": "DEF-f_pinky.01.L.02",
+                                        "f_pinky.02.L": "DEF-f_pinky.02.L",
+                                            "f_pinky.03.L": "DEF-f_pinky.03.L",
+                    "shoulder.R": "DEF-shoulder.R",
+                        "upper_arm.R": "DEF-upper_arm.01.R",
+                            "forearm.R": "DEF-forearm.01.R",
+                                "hand.R": "DEF-hand.R",
+                                    "thumb.01.R": "DEF-thumb.01.R.02",
+                                        "thumb.02.R": "DEF-thumb.02.R",
+                                            "thumb.03.R" : "DEF-thumb.03.R",
+                                    "f_index.01.R": "DEF-f_index.01.R.02",
+                                        "f_index.02.R": "DEF-f_index.02.R",
+                                            "f_index.03.R" : "DEF-f_index.03.R",
+                                    "f_middle.01.R": "DEF-f_middle.01.R.02",
+                                        "f_middle.02.R": "DEF-f_middle.02.R",
+                                            "f_middle.03.R": "DEF-f_middle.03.R",
+                                    "f_ring.01.R": "DEF-f_ring.01.R.02",
+                                        "f_ring.02.R": "DEF-f_ring.02.R",
+                                            "f_ring.03.R": "DEF-f_ring.03.R",
+                                    "f_pinky.01.R": "DEF-f_pinky.01.R.02",
+                                        "f_pinky.02.R": "DEF-f_pinky.02.R",
+                                            "f_pinky.03.R": "DEF-f_pinky.03.R",
+        "thigh.L": "DEF-thigh.01.L",
+            "shin.L": "DEF-shin.01.L",
+                "foot.L": "DEF-foot.L",
+                    "toe.L": "DEF-toe.L",
+        "thigh.R": "DEF-thigh.01.R",
+            "shin.R": "DEF-shin.01.R",
+                "foot.R": "DEF-foot.R",
+                    "toe.R": "DEF-toe.R"
+}
+
+# mapping of game rig deform bones to the deform bones in an advanced MakeHuman generated rig,
+# unfortunately this doesn't work properly because the hips bone of the MakeHuman rig is inverted
+# (i.e. hips bone points in the opposite direction to the spine bone), also unsure about the
+# shoulders
+mhx_bone_map = {
+    "hips": "DEF-hips",
+        "spine": "DEF-spine",
+            "chest": "DEF-chest",
+                "chest-1": "DEF-chest-1",
+                    "neck": "DEF-neck",
+                        "head": "DEF-head",
+                    "shoulder.L": "DEF-clavicle.L",
+                        "upper_arm.L": "DEF-upper_arm.L",
+                            "forearm.L": "DEF-forearm.01.L",
+                                "hand.L": "DEF-hand.L",
+                                    "thumb.01.L": "DEF-thumb.01.L",
+                                        "thumb.02.L": "DEF-thumb.02.L",
+                                            "thumb.03.L" : "DEF-thumb.03.L",
+                                    "f_index.01.L": "DEF-f_index.01.L",
+                                        "f_index.02.L": "DEF-f_index.02.L",
+                                            "f_index.03.L" : "DEF-f_index.03.L",
+                                    "f_middle.01.L": "DEF-f_middle.01.L",
+                                        "f_middle.02.L": "DEF-f_middle.02.L",
+                                            "f_middle.03.L": "DEF-f_middle.03.L",
+                                    "f_ring.01.L": "DEF-f_ring.01.L",
+                                        "f_ring.02.L": "DEF-f_ring.02.L",
+                                            "f_ring.03.L": "DEF-f_ring.03.L",
+                                    "f_pinky.01.L": "DEF-f_pinky.01.L",
+                                        "f_pinky.02.L": "DEF-f_pinky.02.L",
+                                            "f_pinky.03.L": "DEF-f_pinky.03.L",
+                    "shoulder.R": "DEF-clavicle.R",
+                        "upper_arm.R": "DEF-upper_arm.R",
+                            "forearm.R": "DEF-forearm.01.R",
+                                "hand.R": "DEF-hand.R",
+                                    "thumb.01.R": "DEF-thumb.01.R",
+                                        "thumb.02.R": "DEF-thumb.02.R",
+                                            "thumb.03.R" : "DEF-thumb.03.R",
+                                    "f_index.01.R": "DEF-f_index.01.R",
+                                        "f_index.02.R": "DEF-f_index.02.R",
+                                            "f_index.03.R" : "DEF-f_index.03.R",
+                                    "f_middle.01.R": "DEF-f_middle.01.R",
+                                        "f_middle.02.R": "DEF-f_middle.02.R",
+                                            "f_middle.03.R": "DEF-f_middle.03.R",
+                                    "f_ring.01.R": "DEF-f_ring.01.R",
+                                        "f_ring.02.R": "DEF-f_ring.02.R",
+                                            "f_ring.03.R": "DEF-f_ring.03.R",
+                                    "f_pinky.01.R": "DEF-f_pinky.01.R",
+                                        "f_pinky.02.R": "DEF-f_pinky.02.R",
+                                            "f_pinky.03.R": "DEF-f_pinky.03.R",
+        "thigh.L": "DEF-thigh.L",
+            "shin.L": "DEF-shin.01.L",
+                "foot.L": "DEF-foot.L",
+                    "toe.L": "DEF-toe.L",
+        "thigh.R": "DEF-thigh.R",
+            "shin.R": "DEF-shin.01.R",
+                "foot.R": "DEF-foot.R",
+                    "toe.R": "DEF-toe.R"
+}
+
 class BindArmaturesOperator(bpy.types.Operator):
     """
     Hooks up the currently selected game-ready armature (generated by MakeHuman) to a more complex
@@ -50,62 +167,19 @@ class BindArmaturesOperator(bpy.types.Operator):
         description = "The armature that the currently selected armature should be bound to."
     )
 
-    # mapping of game rig deform bones to rigify deform bones, the game rig layout is similar
-    # to the standard Unity3d Mecanim layout (minus the mouth/eye bones since I don't have any
-    # use for them yet)
-    bone_map = {
-        "hips": "DEF-hips",
-            "spine": "DEF-spine",
-                "chest": "DEF-chest",
-                    "chest-1": "DEF-chest-1",
-                        "neck": "DEF-neck",
-                            "head": "DEF-head",
-                        "shoulder.L": "DEF-shoulder.L",
-                            "upper_arm.L": "DEF-upper_arm.01.L",
-                                "forearm.L": "DEF-forearm.01.L",
-                                    "hand.L": "DEF-hand.L",
-                                        "thumb.01.L": "DEF-thumb.01.L.02",
-                                            "thumb.02.L": "DEF-thumb.02.L",
-                                                "thumb.03.L" : "DEF-thumb.03.L",
-                                        "f_index.01.L": "DEF-f_index.01.L.02",
-                                            "f_index.02.L": "DEF-f_index.02.L",
-                                                "f_index.03.L" : "DEF-f_index.03.L",
-                                        "f_middle.01.L": "DEF-f_middle.01.L.02",
-                                            "f_middle.02.L": "DEF-f_middle.02.L",
-                                                "f_middle.03.L": "DEF-f_middle.03.L",
-                                        "f_ring.01.L": "DEF-f_ring.01.L.02",
-                                            "f_ring.02.L": "DEF-f_ring.02.L",
-                                                "f_ring.03.L": "DEF-f_ring.03.L",
-                                        "f_pinky.01.L": "DEF-f_pinky.01.L.02",
-                                            "f_pinky.02.L": "DEF-f_pinky.02.L",
-                                                "f_pinky.03.L": "DEF-f_pinky.03.L",
-                        "shoulder.R": "DEF-shoulder.R",
-                            "upper_arm.R": "DEF-upper_arm.01.R",
-                                "forearm.R": "DEF-forearm.01.R",
-                                    "hand.R": "DEF-hand.R",
-                                        "thumb.01.R": "DEF-thumb.01.R.02",
-                                            "thumb.02.R": "DEF-thumb.02.R",
-                                                "thumb.03.R" : "DEF-thumb.03.R",
-                                        "f_index.01.R": "DEF-f_index.01.R.02",
-                                            "f_index.02.R": "DEF-f_index.03.R",
-                                                "f_index.03.R" : "DEF-f_index.03.R",
-                                        "f_middle.01.R": "DEF-f_middle.01.R.02",
-                                            "f_middle.02.R": "DEF-f_middle.02.R",
-                                                "f_middle.03.R": "DEF-f_middle.03.R",
-                                        "f_ring.01.R": "DEF-f_ring.01.R.02",
-                                            "f_ring.02.R": "DEF-f_ring.02.R",
-                                                "f_ring.03.R": "DEF-f_ring.03.R",
-                                        "f_pinky.01.R": "DEF-f_pinky.01.R.02",
-                                            "f_pinky.02.R": "DEF-f_pinky.02.R",
-                                                "f_pinky.03.R": "DEF-f_pinky.03.R",
-            "thigh.L": "DEF-thigh.01.L",
-                "shin.L": "DEF-shin.01.L",
-                    "foot.L": "DEF-foot.L",
-                        "toe.L": "DEF-toe.L",
-            "thigh.R": "DEF-thigh.01.R",
-                "shin.R": "DEF-shin.01.R",
-                    "foot.R": "DEF-foot.R",
-                        "toe.R": "DEF-toe.R"
+    target_armature_type = bpy.props.EnumProperty(
+        name = "Target Armature Type",
+        description = "The type of the target armature.",
+        items = [
+            ("rigify", "Rigify",    "Humanoid Rigify armature"),
+            ("mhx",    "MakeHuman", "Advanced MakeHuman armature")
+        ],
+        default = "rigify"
+    )
+
+    bone_maps = {
+        "rigify": rigify_bone_map,
+        "mhx": mhx_bone_map
     }
 
     @classmethod
@@ -119,7 +193,11 @@ class BindArmaturesOperator(bpy.types.Operator):
 
     def execute(self, context):
         if self.target_armature_name in bpy.data.armatures:
-            self.bind_rigs(context.active_object, bpy.data.objects[self.target_armature_name])
+            self.bind_rigs(
+                context.active_object, # the simple armature
+                bpy.data.objects[self.target_armature_name], # the complex armature
+                self.bone_maps[self.target_armature_type]
+            )
         else:
             self.report({'ERROR'}, "Target armature not found!")
         return {'FINISHED'}
@@ -127,7 +205,7 @@ class BindArmaturesOperator(bpy.types.Operator):
     # initialize the operator from the context
     def invoke(self, context, event):
         # display a dialog to let the user set operator properties
-        return context.window_manager.invoke_props_dialog(self)
+        return context.window_manager.invoke_props_dialog(self, width = 400)
 
     # layout the operator properties dialog
     def draw(self, context):
@@ -135,12 +213,13 @@ class BindArmaturesOperator(bpy.types.Operator):
         # TODO: restrict the list to armatures only, this will require creating a collection of
         #       armature names
         layout.prop_search(self, "target_armature_name", context.scene, "objects")
+        layout.prop(self, "target_armature_type")
 
-    def bind_rigs(self, source_rig, target_rig):
+    def bind_rigs(self, source_rig, target_rig, bone_map):
         # pose bones should be edited in POSE mode
         bpy.ops.object.mode_set(mode = 'POSE')
 
-        for (source_bone_name, target_bone_name) in self.bone_map.items():
+        for (source_bone_name, target_bone_name) in bone_map.items():
             # TODO: check if this constraint already exists (ignore the name), and if so don't
             #       create it again
             source_bone = source_rig.pose.bones[source_bone_name]
