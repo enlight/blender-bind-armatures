@@ -177,6 +177,9 @@ class BindArmaturesOperator(bpy.types.Operator):
         default = "rigify"
     )
 
+    # collection of armatures from which the target armature must be chosen
+    available_armatures = bpy.props.CollectionProperty(type = bpy.types.PropertyGroup)
+
     bone_maps = {
         "rigify": rigify_bone_map,
         "mhx": mhx_bone_map
@@ -204,15 +207,19 @@ class BindArmaturesOperator(bpy.types.Operator):
 
     # initialize the operator from the context
     def invoke(self, context, event):
+        # collect all the armatures that can be used as targets for the operator
+        self.available_armatures.clear()
+        for obj in bpy.data.objects:
+            if (obj.type == 'ARMATURE') and (context.active_object.name != obj.name):
+                self.available_armatures.add().name = obj.name
+
         # display a dialog to let the user set operator properties
         return context.window_manager.invoke_props_dialog(self, width = 400)
 
     # layout the operator properties dialog
     def draw(self, context):
         layout = self.layout
-        # TODO: restrict the list to armatures only, this will require creating a collection of
-        #       armature names
-        layout.prop_search(self, "target_armature_name", context.scene, "objects")
+        layout.prop_search(self, "target_armature_name", self, "available_armatures")
         layout.prop(self, "target_armature_type")
 
     def bind_rigs(self, source_rig, target_rig, bone_map):
